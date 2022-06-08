@@ -63,6 +63,15 @@ outputs:
   repository-uri:
     description: 'The docker registry to use'
     value: ${{ steps.ecr.outputs.repository-uri }}
+  branch-name:
+    description: "Branch name"
+    value: ${{steps.branch-name.outputs.current_branch}}
+  is-tag:
+    description: "True if branch is a tag"
+    value: ${{steps.branch-name.outputs.is_tag}}
+  tag:
+    description: "Tag name"
+    value: ${{steps.branch-name.outputs.tag}}
 runs:
   using: "composite"
   steps:
@@ -149,3 +158,6 @@ runs:
         type: npm
         repo: npm-store
         npmrc-output-path: ${{ inputs.npmrc-output-path }}
+    - name: Get branch name
+      id: branch-name
+      uses: tj-actions/branch-names@v5.2
