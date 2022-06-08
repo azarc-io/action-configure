@@ -62,6 +62,9 @@ inputs:
   checkout-head:
     required: false
     description: "Set to true if you want to checkout the branch the PR is coming from in the head repo"
+  checkout-token:
+    required: false
+    description: "Optional checkout token (only valid when using checkout-head)"
 outputs:
   repository-uri:
     description: 'The docker registry to use'
@@ -83,13 +86,14 @@ runs:
       run: sudo find /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/. -name . -o -prune -exec rm -rf -- {} + || true
     - name: "Checkout"
       uses: actions/checkout@v3
-      if: inputs.checkout-head == 'false'
+      if: inputs.checkout-head == 'true'
       with:
         ref: ${{ github.event.pull_request.head.ref }}
         fetch-depth: 0
+        token: ${{ inputs.checkout-token }}
     - name: "Checkout"
       uses: actions/checkout@v3
-      if: inputs.checkout-head == 'true'
+      if: inputs.checkout-head == 'false'
       with:
         fetch-depth: 0
     - name: "Configure Git"
