@@ -62,6 +62,7 @@ inputs:
   checkout-head:
     required: false
     description: "Set to true if you want to checkout the branch the PR is coming from in the head repo"
+    default: 'false'
   checkout-token:
     required: false
     description: "Optional checkout token (only valid when using checkout-head)"
