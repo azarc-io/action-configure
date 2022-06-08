@@ -83,14 +83,13 @@ runs:
       run: sudo find /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/. -name . -o -prune -exec rm -rf -- {} + || true
     - name: "Checkout"
       uses: actions/checkout@v3
-      if: inputs.checkout-head == "false"
+      if: inputs.checkout-head == 'false'
       with:
-        repository: ${{ github.event.pull_request.head.repo.full_name }}
         ref: ${{ github.event.pull_request.head.ref }}
         fetch-depth: 0
     - name: "Checkout"
       uses: actions/checkout@v3
-      if: inputs.checkout-head == "true"
+      if: inputs.checkout-head == 'true'
       with:
         fetch-depth: 0
     - name: "Configure Git"
