@@ -1,0 +1,51 @@
+name: Build and publish
+on:
+  push:
+    tags-ignore:
+      - "*.*"
+    branches:
+      - main
+      - feat/**
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: "Update Versions"
+        uses: paulhatch/semantic-version@v4.0.3
+        id: versioning
+        with:
+          tag_prefix: "v"
+          major_pattern: "(MAJOR)"
+          minor_pattern: "(MINOR)"
+          format: "${major}.${minor}.${patch}"
+          namespace: ""
+          bump_each_commit: true
+          short_tags: false
+      - name: Create tag
+        run: |
+          git config --global user.email "${{ github.event.pusher.email }}"
+          git config --global user.name "${{ github.event.pusher.name }}"
+          git tag v${{ steps.versioning.outputs.version }}
+          git push origin --tags
+      - name: "Build Changelog"
+        id: build_changelog
+        uses: mikepenz/release-changelog-builder-action@v3.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.versioning.outputs.version }}
+          release_name: v${{ steps.versioning.outputs.version }}
+          body: ${{ steps.build_changelog.outputs.changelog }}
+          draft: false
+          prerelease: false
