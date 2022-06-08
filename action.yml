@@ -65,7 +65,7 @@ outputs:
     value: ${{ steps.ecr.outputs.repository-uri }}
   branch-name:
     description: "Branch name"
-    value: ${{steps.branch-name.outputs.current_branch}}
+    value: ${{steps.branch-name.outputs.head_ref_branch}}
   is-tag:
     description: "True if branch is a tag"
     value: ${{steps.branch-name.outputs.is_tag}}
