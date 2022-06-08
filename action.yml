@@ -59,6 +59,9 @@ inputs:
   jira-api-token:
     required: false
     description: "The Jira API token"
+  checkout-head:
+    required: false
+    description: "Set to true if you want to checkout the branch the PR is coming from in the head repo"
 outputs:
   repository-uri:
     description: 'The docker registry to use'
@@ -80,6 +83,14 @@ runs:
       run: sudo find /home/runner/work/${{ github.event.repository.name }}/${{ github.event.repository.name }}/. -name . -o -prune -exec rm -rf -- {} + || true
     - name: "Checkout"
       uses: actions/checkout@v3
+      if: inputs.checkout-head == "false"
+      with:
+        repository: ${{ github.event.pull_request.head.repo.full_name }}
+        ref: ${{ github.event.pull_request.head.ref }}
+        fetch-depth: 0
+    - name: "Checkout"
+      uses: actions/checkout@v3
+      if: inputs.checkout-head == "true"
       with:
         fetch-depth: 0
     - name: "Configure Git"
