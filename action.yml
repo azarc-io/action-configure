@@ -2,17 +2,17 @@ name: 'Configure'
 description: 'Checkout & Configure Requirements'
 inputs:
   aws-access-key-id:
-    required: true
+    required: false
     description: "The aws-access-key-id used to authenticate with AWS"
   aws-secret-access-key:
-    required: true
+    required: false
     description: "The aws-secret-access-key used to authenticate with AWS"
   aws-region:
-    required: true
+    required: false
     description: "The aws region to use"
     default: us-east-1
   aws-account-id:
-    required: true
+    required: false
     description: "The aws account id used to authenticate with code artifact"
   repository-name:
     required: false
@@ -42,10 +42,10 @@ inputs:
     required: false
     description: "The password used to authenticate with Dockerhub"
   npmrc-output-path:
-    required: true
+    required: false
     description: "The path to write the .npmrc file to"
   npmrc-fontawesome-token:
-    required: true
+    required: false
     description: "The token to add to the .npmrc that provides access to the fontawesome repository"
   use-sudo:
     required: false
@@ -118,14 +118,14 @@ runs:
         fi
     - name: "Docker Registry Login"
       uses: docker/login-action@v2.0.0
-      if: inputs.dockerhub-user != '' && inputs.dockerhub-pass != ''
+      if: inputs.registry == '' && inputs.dockerhub-user != '' && inputs.dockerhub-pass != ''
       with:
         registry: ${{ inputs.registry }}
         username: ${{ inputs.registry-user }}
         password: ${{ inputs.registry-pass }}
     - name: "Dockerhub Registry Login"
       uses: docker/login-action@v2.0.0
-      if: inputs.registry != ''
+      if: inputs.registry != '' && inputs.dockerhub-user != '' && inputs.dockerhub-pass != ''
       with:
         username: ${{ inputs.dockerhub-user }}
         password: ${{ inputs.dockerhub-pass }}
@@ -138,16 +138,18 @@ runs:
         password: ${{ inputs.cache-registry-pass }}
     - name: "AWS Credentials"
       uses: aws-actions/configure-aws-credentials@v1
+      if: inputs.aws-access-key-id != '' && inputs.aws-secret-access-key != ''
       with:
         aws-access-key-id: ${{ inputs.aws-access-key-id }}
         aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
         aws-region: us-east-1
     - name: "Login to Amazon ECR"
+      if: inputs.aws-access-key-id != '' && inputs.aws-secret-access-key != ''
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1
     - name: "AWS ECR Create Repo"
       id: ecr
-      if: inputs.repository-name != ''
+      if: inputs.repository-name != '' && inputs.aws-access-key-id != '' && inputs.aws-secret-access-key != ''
       uses: int128/create-ecr-repository-action@v1
       with:
         repository: ${{ inputs.repository-name }}
@@ -169,7 +171,7 @@ runs:
         EOF
     - name: "Login To Code Artifact"
       uses: azarc-io/codeartifact@v0.0.2
-      if: inputs.npmrc-output-path != ''
+      if: inputs.npmrc-output-path != '' && inputs.aws-account-id != '' && inputs.aws-access-key-id != '' && inputs.aws-secret-access-key != ''
       id: configure
       with:
         region: ${{ inputs.aws-region }}
