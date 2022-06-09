@@ -189,5 +189,6 @@ runs:
     - name: Find Issue
       uses: atlassian/gajira-find-issue-key@master
       id: issue
+      if: inputs.jira_api_token != '' && inputs.jira_user_email != '' && inputs.jira_base_url != ''
       with:
-        string: ${{ steps.branch-name.outputs.issue }}
+        string: ${{steps.branch-name.outputs.head_ref_branch}}
