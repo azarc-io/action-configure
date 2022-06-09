@@ -158,7 +158,7 @@ runs:
         repository: ${{ inputs.repository-name }}
     - name: "Login To Jira"
       uses: atlassian/gajira-login@master
-      if: inputs.jira_api_token != '' && inputs.jira_user_email != '' && inputs.jira_base_url != ''
+      if: inputs.jira-api-token != '' && inputs.jira-user-email != '' && inputs.jira-base-url != ''
       env:
         JIRA_BASE_URL: ${{ inputs.jira-base-url }}
         JIRA_USER_EMAIL: ${{ inputs.jira-user-email }}
