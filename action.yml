@@ -62,6 +62,7 @@ inputs:
   checkout-head:
     required: false
     description: "Set to a ref to checkout that head"
+    default: 'false'
   checkout-token:
     required: false
     description: "Optional checkout token (only valid when using checkout-head)"
@@ -151,7 +152,7 @@ runs:
       uses: int128/create-ecr-repository-action@v1
       with:
         repository: ${{ inputs.repository-name }}
-    - name: Login To Jira
+    - name: "Login To Jira"
       uses: atlassian/gajira-login@master
       if: inputs.jira_api_token != '' && inputs.jira_user_email != '' && inputs.jira_base_url != ''
       env:
