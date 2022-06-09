@@ -78,6 +78,9 @@ outputs:
   tag:
     description: "Tag name"
     value: ${{steps.branch-name.outputs.tag}}
+  issue:
+    description: "The Jira Issue"
+    value: ${{ steps.issue.outputs.issue }}
 runs:
   using: "composite"
   steps:
@@ -183,3 +186,8 @@ runs:
     - name: Get branch name
       id: branch-name
       uses: tj-actions/branch-names@v5.2
+    - name: Find Issue
+      uses: atlassian/gajira-find-issue-key@master
+      id: issue
+      with:
+        string: ${{ steps.branch-name.outputs.issue }}
