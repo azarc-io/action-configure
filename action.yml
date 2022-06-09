@@ -62,7 +62,6 @@ inputs:
   checkout-head:
     required: false
     description: "Set to a ref to checkout that head"
-    default: 'false'
   checkout-token:
     required: false
     description: "Optional checkout token (only valid when using checkout-head)"
@@ -100,7 +99,7 @@ runs:
         fetch-depth: 0
     - name: "Checkout"
       uses: actions/checkout@v3
-      if: inputs.checkout-head == 'false'
+      if: inputs.checkout-head == ''
       with:
         fetch-depth: 0
     - name: "Configure Git"
