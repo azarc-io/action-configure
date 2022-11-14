@@ -111,14 +111,6 @@ runs:
         git config --global --add safe.directory /__w/verathread/verathread
         git config --global user.email "${{ github.event.pusher.email }}"
         git config --global user.name "${{ github.event.pusher.name }}"
-    - name: "Download Latest Earthly"
-      shell: bash
-      run: |
-        if [ ${{ inputs.use-sudo }} = true ] ; then
-          sudo /bin/sh -c 'wget -q https://github.com/earthly/earthly/releases/download/v0.6.14/earthly-linux-amd64 -O /usr/local/bin/earthly && chmod +x /usr/local/bin/earthly'
-        else
-          /bin/sh -c 'wget -q https://github.com/earthly/earthly/releases/download/v0.6.14/earthly-linux-amd64 -O /usr/local/bin/earthly && chmod +x /usr/local/bin/earthly'
-        fi
     - name: "Docker Registry Login"
       uses: docker/login-action@v2.0.0
       if: inputs.registry == '' && inputs.dockerhub-user != '' && inputs.dockerhub-pass != ''
@@ -157,7 +149,7 @@ runs:
       with:
         repository: ${{ inputs.repository-name }}
     - name: "Login To Jira"
-      uses: atlassian/gajira-login@v2
+      uses: atlassian/gajira-login@v2.0.0
       if: inputs.jira-api-token != '' && inputs.jira-user-email != '' && inputs.jira-base-url != ''
       env:
         JIRA_BASE_URL: ${{ inputs.jira-base-url }}
@@ -183,7 +175,7 @@ runs:
         type: npm
         repo: npm-store
         npmrc-output-path: ${{ inputs.npmrc-output-path }}
-    - name: Get branch name
+    - name: "Get branch name"
       id: branch-name
       uses: tj-actions/branch-names@v5.2
     - name: Find Issue
