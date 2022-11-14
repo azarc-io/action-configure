@@ -132,7 +132,7 @@ runs:
         username: ${{ inputs.cache-registry-user }}
         password: ${{ inputs.cache-registry-pass }}
     - name: "AWS Credentials"
-      uses: aws-actions/configure-aws-credentials@v1.7.0
+      uses: aws-actions/configure-aws-credentials@v1-node16
       if: inputs.aws-access-key-id != '' && inputs.aws-secret-access-key != ''
       with:
         aws-access-key-id: ${{ inputs.aws-access-key-id }}
@@ -177,9 +177,9 @@ runs:
         npmrc-output-path: ${{ inputs.npmrc-output-path }}
     - name: "Get branch name"
       id: branch-name
-      uses: tj-actions/branch-names@v5.2
+      uses: tj-actions/branch-names@v6
     - name: Find Issue
-      uses: atlassian/gajira-find-issue-key@master
+      uses: atlassian/gajira-find-issue-key@v2.0.2
       id: issue
       if: inputs.jira-api-token != '' && inputs.jira-user-email != '' && inputs.jira-base-url != ''
       with:
