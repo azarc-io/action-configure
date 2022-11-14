@@ -140,7 +140,7 @@ runs:
         username: ${{ inputs.cache-registry-user }}
         password: ${{ inputs.cache-registry-pass }}
     - name: "AWS Credentials"
-      uses: aws-actions/configure-aws-credentials@v1
+      uses: aws-actions/configure-aws-credentials@v1.7.0
       if: inputs.aws-access-key-id != '' && inputs.aws-secret-access-key != ''
       with:
         aws-access-key-id: ${{ inputs.aws-access-key-id }}
@@ -149,15 +149,15 @@ runs:
     - name: "Login to Amazon ECR"
       if: inputs.aws-access-key-id != '' && inputs.aws-secret-access-key != ''
       id: login-ecr
-      uses: aws-actions/amazon-ecr-login@v1
+      uses: aws-actions/amazon-ecr-login@v1.5.3
     - name: "AWS ECR Create Repo"
       id: ecr
       if: inputs.repository-name != '' && inputs.aws-access-key-id != '' && inputs.aws-secret-access-key != ''
-      uses: int128/create-ecr-repository-action@v1
+      uses: int128/create-ecr-repository-action@v1.84.0
       with:
         repository: ${{ inputs.repository-name }}
     - name: "Login To Jira"
-      uses: atlassian/gajira-login@master
+      uses: atlassian/gajira-login@v2
       if: inputs.jira-api-token != '' && inputs.jira-user-email != '' && inputs.jira-base-url != ''
       env:
         JIRA_BASE_URL: ${{ inputs.jira-base-url }}
