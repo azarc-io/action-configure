@@ -159,7 +159,8 @@ runs:
       shell: bash
       if: inputs.npmrc-fontawesome-token != '' && inputs.npmrc-output-path != ''
       run: |
-        cat <<EOF >> ${{ inputs.npmrc-output-path }}/.npmrc 
+        cat <<EOF >> ${{ inputs.npmrc-output-path }}/.npmrc
+        always-auth=true
         @fortawesome:registry=https://npm.fontawesome.com/
         //npm.fontawesome.com/:always-auth=true
         //npm.fontawesome.com/:_authToken=${{ inputs.npmrc-fontawesome-token }}
