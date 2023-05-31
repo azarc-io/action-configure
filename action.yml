@@ -137,11 +137,13 @@ runs:
       with:
         aws-access-key-id: ${{ inputs.aws-access-key-id }}
         aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
-        aws-region: us-east-1
+        aws-region: ${{ inputs.aws-region }}
     - name: "Login to Amazon ECR"
       if: inputs.aws-access-key-id != '' && inputs.aws-secret-access-key != ''
       id: login-ecr
       uses: aws-actions/amazon-ecr-login@v1.5.3
+      with:
+        aws-region: ${{ inputs.aws-region }}
     - name: "AWS ECR Create Repo"
       id: ecr
       if: inputs.repository-name != '' && inputs.aws-access-key-id != '' && inputs.aws-secret-access-key != ''
